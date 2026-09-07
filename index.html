@@ -124,7 +124,11 @@
       noButton.style.top = randomY + "px";
     }
 
-    noButton.addEventListener("mouseenter", moveNoButton);
+    noButton.addEventListener("mouseover", moveNoButton);
+    noButton.addEventListener("click", function(event) {
+      event.preventDefault();
+      moveNoButton();
+    });
 
     noButton.addEventListener("touchstart", function(event) {
       event.preventDefault();
