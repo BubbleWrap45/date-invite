@@ -40,6 +40,14 @@
       font-size: 1.1rem;
     }
 
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
     button {
       border: none;
       padding: 15px 25px;
@@ -48,24 +56,22 @@
       cursor: pointer;
     }
 
-    #yesButton,
-    #confirmButton {
+    .primary {
       background: #ff4f81;
       color: white;
+      width: 100%;
+      margin-top: 15px;
     }
 
     #yesButton {
+      background: #ff4f81;
+      color: white;
       margin: 15px;
     }
 
     #noButton {
       background: #eee;
       position: fixed;
-    }
-
-    #detailsScreen,
-    #finalScreen {
-      display: none;
     }
 
     .heart {
@@ -98,11 +104,6 @@
       min-height: 90px;
     }
 
-    #confirmButton {
-      width: 100%;
-      margin-top: 15px;
-    }
-
     .confirmation {
       margin-top: 25px;
       padding: 22px;
@@ -121,11 +122,9 @@
       margin: 12px 0;
     }
 
-    .screenshot-text {
-      margin-top: 22px;
-      font-size: 0.95rem;
+    .small {
+      font-size: 0.9rem;
       color: #888;
-      text-align: center;
     }
   </style>
 </head>
@@ -134,44 +133,42 @@
 
   <div class="card">
 
-    <!-- FIRST SCREEN -->
-    <div id="questionScreen">
-
+    <!-- QUESTION -->
+    <div id="questionScreen" class="step active">
       <h1>I have a question for you ❤️</h1>
-
       <p>Will you go on a date with me?</p>
 
       <button id="yesButton">YES ❤️</button>
-
       <button id="noButton">NO</button>
-
     </div>
 
-
-    <!-- DETAILS SCREEN -->
-    <div id="detailsScreen">
-
+    <!-- DATE + TIME -->
+    <div id="dateStep" class="step">
       <div class="heart">❤️</div>
-
       <h1>Good choice 😌</h1>
-
-      <p>Now you get to help choose the details.</p>
-
+      <p>First, when should we go?</p>
 
       <div class="form-group">
-        <label for="date">📅 What date?</label>
+        <label for="date">📅 Date</label>
         <input type="date" id="date">
       </div>
 
-
       <div class="form-group">
-        <label for="time">⏰ What time?</label>
+        <label for="time">⏰ Time</label>
         <input type="time" id="time">
       </div>
 
+      <button class="primary" id="dateNext">
+        Next →
+      </button>
+    </div>
+
+    <!-- LOCATION -->
+    <div id="locationStep" class="step">
+      <h1>Where should we go? 📍</h1>
 
       <div class="form-group">
-        <label for="location">📍 Where?</label>
+        <label for="location">Location</label>
         <input
           type="text"
           id="location"
@@ -179,9 +176,17 @@
         >
       </div>
 
+      <button class="primary" id="locationNext">
+        Next →
+      </button>
+    </div>
+
+    <!-- ACTIVITY -->
+    <div id="activityStep" class="step">
+      <h1>What should we do? ✨</h1>
 
       <div class="form-group">
-        <label for="activity">✨ What should we do?</label>
+        <label for="activity">Plan</label>
         <input
           type="text"
           id="activity"
@@ -189,35 +194,35 @@
         >
       </div>
 
+      <button class="primary" id="activityNext">
+        Next →
+      </button>
+    </div>
+
+    <!-- MESSAGE -->
+    <div id="messageStep" class="step">
+      <h1>Anything else? 💌</h1>
 
       <div class="form-group">
-        <label for="message">💌 Anything you want to add?</label>
-
+        <label for="message">Message</label>
         <textarea
           id="message"
           placeholder="Leave me a message..."
         ></textarea>
-
       </div>
 
-
-      <button id="confirmButton">
+      <button class="primary" id="confirmButton">
         Confirm our date ❤️
       </button>
-
     </div>
 
-
-
-    <!-- FINAL SCREEN -->
-    <div id="finalScreen">
-
+    <!-- FINAL -->
+    <div id="finalScreen" class="step">
       <div class="heart">❤️</div>
 
       <h1>It's a date!</h1>
 
       <div class="confirmation">
-
         <h2>Our Date ❤️</h2>
 
         <p>
@@ -244,39 +249,30 @@
           <strong>💌 Message:</strong>
           <span id="finalMessage"></span>
         </p>
-
       </div>
 
-      <p class="screenshot-text">
+      <p class="small">
         📸 Screenshot this and send it to me
       </p>
-
     </div>
 
   </div>
 
-
-
   <script>
+    const noButton = document.getElementById("noButton");
+    const yesButton = document.getElementById("yesButton");
 
-    const noButton =
-      document.getElementById("noButton");
+    const questionScreen = document.getElementById("questionScreen");
+    const dateStep = document.getElementById("dateStep");
+    const locationStep = document.getElementById("locationStep");
+    const activityStep = document.getElementById("activityStep");
+    const messageStep = document.getElementById("messageStep");
+    const finalScreen = document.getElementById("finalScreen");
 
-    const yesButton =
-      document.getElementById("yesButton");
-
-    const confirmButton =
-      document.getElementById("confirmButton");
-
-    const questionScreen =
-      document.getElementById("questionScreen");
-
-    const detailsScreen =
-      document.getElementById("detailsScreen");
-
-    const finalScreen =
-      document.getElementById("finalScreen");
-
+    const dateNext = document.getElementById("dateNext");
+    const locationNext = document.getElementById("locationNext");
+    const activityNext = document.getElementById("activityNext");
+    const confirmButton = document.getElementById("confirmButton");
 
     let attempts = 0;
 
@@ -287,141 +283,97 @@
       "Nice try 😂"
     ];
 
+    function showStep(step) {
+      const steps = document.querySelectorAll(".step");
+
+      steps.forEach(function(item) {
+        item.classList.remove("active");
+      });
+
+      step.classList.add("active");
+    }
 
     function moveNo() {
-
       if (attempts >= 4) {
         noButton.style.display = "none";
         return;
       }
 
       noButton.innerText = messages[attempts];
-
       attempts++;
 
-      const maxX =
-        window.innerWidth -
-        noButton.offsetWidth -
-        20;
+      const maxX = window.innerWidth - noButton.offsetWidth - 20;
+      const maxY = window.innerHeight - noButton.offsetHeight - 20;
 
-      const maxY =
-        window.innerHeight -
-        noButton.offsetHeight -
-        20;
-
-      const x =
-        Math.floor(Math.random() * maxX);
-
-      const y =
-        Math.floor(Math.random() * maxY);
+      const x = Math.floor(Math.random() * maxX);
+      const y = Math.floor(Math.random() * maxY);
 
       noButton.style.left = x + "px";
       noButton.style.top = y + "px";
     }
 
+    noButton.addEventListener("mouseover", moveNo);
 
-    noButton.addEventListener(
-      "mouseover",
-      moveNo
-    );
+    noButton.addEventListener("touchstart", function(event) {
+      event.preventDefault();
+      moveNo();
+    });
 
+    yesButton.addEventListener("click", function() {
+      noButton.style.display = "none";
+      showStep(dateStep);
+    });
 
-    noButton.addEventListener(
-      "touchstart",
-      function(event) {
+    dateNext.addEventListener("click", function() {
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
 
-        event.preventDefault();
-
-        moveNo();
-
+      if (!date || !time) {
+        alert("Please choose a date and time ❤️");
+        return;
       }
-    );
 
+      showStep(locationStep);
+    });
 
-    yesButton.addEventListener(
-      "click",
-      function() {
+    locationNext.addEventListener("click", function() {
+      const location = document.getElementById("location").value.trim();
 
-        noButton.style.display = "none";
-
-        questionScreen.style.display =
-          "none";
-
-        detailsScreen.style.display =
-          "block";
-
+      if (!location) {
+        alert("Please choose where we should go 📍");
+        return;
       }
-    );
 
+      showStep(activityStep);
+    });
 
-    confirmButton.addEventListener(
-      "click",
-      function() {
+    activityNext.addEventListener("click", function() {
+      const activity = document.getElementById("activity").value.trim();
 
-        const date =
-          document.getElementById("date").value;
-
-        const time =
-          document.getElementById("time").value;
-
-        const location =
-          document.getElementById("location").value;
-
-        const activity =
-          document.getElementById("activity").value;
-
-        const message =
-          document.getElementById("message").value;
-
-
-        if (!date || !time || !location) {
-
-          alert(
-            "Please choose a date, time and location ❤️"
-          );
-
-          return;
-
-        }
-
-
-        document.getElementById(
-          "finalDate"
-        ).innerText = date;
-
-
-        document.getElementById(
-          "finalTime"
-        ).innerText = time;
-
-
-        document.getElementById(
-          "finalLocation"
-        ).innerText =
-          location || "Surprise me";
-
-
-        document.getElementById(
-          "finalActivity"
-        ).innerText =
-          activity || "We'll decide together";
-
-
-        document.getElementById(
-          "finalMessage"
-        ).innerText =
-          message || "No message";
-
-
-        detailsScreen.style.display =
-          "none";
-
-        finalScreen.style.display =
-          "block";
-
+      if (!activity) {
+        alert("Tell me what we should do ✨");
+        return;
       }
-    );
 
+      showStep(messageStep);
+    });
+
+    confirmButton.addEventListener("click", function() {
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+      const location = document.getElementById("location").value;
+      const activity = document.getElementById("activity").value;
+      const message = document.getElementById("message").value;
+
+      document.getElementById("finalDate").innerText = date;
+      document.getElementById("finalTime").innerText = time;
+      document.getElementById("finalLocation").innerText = location;
+      document.getElementById("finalActivity").innerText = activity;
+      document.getElementById("finalMessage").innerText =
+        message || "No message";
+
+      showStep(finalScreen);
+    });
   </script>
 
 </body>
