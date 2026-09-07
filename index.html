@@ -6,6 +6,10 @@
   <title>For You ❤️</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -14,39 +18,43 @@
       align-items: center;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #ffe4ec, #fff7fa);
-      overflow: hidden;
+      padding: 20px;
     }
 
     .card {
-      width: 85%;
-      max-width: 500px;
+      width: 100%;
+      max-width: 520px;
       background: white;
-      padding: 40px 25px;
+      padding: 35px 25px;
       border-radius: 25px;
       text-align: center;
       box-shadow: 0 15px 40px rgba(0,0,0,0.12);
     }
 
     h1 {
-      font-size: 2rem;
+      margin-top: 0;
     }
 
     p {
-      font-size: 1.2rem;
       color: #555;
+      font-size: 1.1rem;
     }
 
     button {
       border: none;
       padding: 15px 25px;
       border-radius: 30px;
-      font-size: 18px;
+      font-size: 17px;
       cursor: pointer;
     }
 
-    #yesButton {
+    #yesButton,
+    #confirmButton {
       background: #ff4f81;
       color: white;
+    }
+
+    #yesButton {
       margin: 15px;
     }
 
@@ -55,12 +63,69 @@
       position: fixed;
     }
 
-    #success {
+    #detailsScreen,
+    #finalScreen {
       display: none;
     }
 
     .heart {
-      font-size: 60px;
+      font-size: 55px;
+    }
+
+    .form-group {
+      text-align: left;
+      margin: 18px 0;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    #confirmButton {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .confirmation {
+      margin-top: 25px;
+      padding: 22px;
+      border: 2px solid #ffd0dd;
+      border-radius: 20px;
+      background: #fff8fa;
+      text-align: left;
+    }
+
+    .confirmation h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .confirmation p {
+      margin: 12px 0;
+    }
+
+    .screenshot-text {
+      margin-top: 22px;
+      font-size: 0.95rem;
+      color: #888;
+      text-align: center;
     }
   </style>
 </head>
@@ -69,7 +134,9 @@
 
   <div class="card">
 
+    <!-- FIRST SCREEN -->
     <div id="questionScreen">
+
       <h1>I have a question for you ❤️</h1>
 
       <p>Will you go on a date with me?</p>
@@ -77,36 +144,141 @@
       <button id="yesButton">YES ❤️</button>
 
       <button id="noButton">NO</button>
+
     </div>
 
 
-    <div id="success">
+    <!-- DETAILS SCREEN -->
+    <div id="detailsScreen">
+
       <div class="heart">❤️</div>
 
       <h1>Good choice 😌</h1>
 
-      <p>I knew you'd say yes.</p>
+      <p>Now you get to help choose the details.</p>
 
-      <p>Now let's work out the details...</p>
+
+      <div class="form-group">
+        <label for="date">📅 What date?</label>
+        <input type="date" id="date">
+      </div>
+
+
+      <div class="form-group">
+        <label for="time">⏰ What time?</label>
+        <input type="time" id="time">
+      </div>
+
+
+      <div class="form-group">
+        <label for="location">📍 Where?</label>
+        <input
+          type="text"
+          id="location"
+          placeholder="Restaurant, beach, your place..."
+        >
+      </div>
+
+
+      <div class="form-group">
+        <label for="activity">✨ What should we do?</label>
+        <input
+          type="text"
+          id="activity"
+          placeholder="Dinner, drinks, movie, surprise me..."
+        >
+      </div>
+
+
+      <div class="form-group">
+        <label for="message">💌 Anything you want to add?</label>
+
+        <textarea
+          id="message"
+          placeholder="Leave me a message..."
+        ></textarea>
+
+      </div>
+
+
+      <button id="confirmButton">
+        Confirm our date ❤️
+      </button>
+
+    </div>
+
+
+
+    <!-- FINAL SCREEN -->
+    <div id="finalScreen">
+
+      <div class="heart">❤️</div>
+
+      <h1>It's a date!</h1>
+
+      <div class="confirmation">
+
+        <h2>Our Date ❤️</h2>
+
+        <p>
+          <strong>📅 Date:</strong>
+          <span id="finalDate"></span>
+        </p>
+
+        <p>
+          <strong>⏰ Time:</strong>
+          <span id="finalTime"></span>
+        </p>
+
+        <p>
+          <strong>📍 Location:</strong>
+          <span id="finalLocation"></span>
+        </p>
+
+        <p>
+          <strong>✨ Plan:</strong>
+          <span id="finalActivity"></span>
+        </p>
+
+        <p>
+          <strong>💌 Message:</strong>
+          <span id="finalMessage"></span>
+        </p>
+
+      </div>
+
+      <p class="screenshot-text">
+        📸 Screenshot this and send it to me
+      </p>
+
     </div>
 
   </div>
 
 
+
   <script>
 
-    const noButton = document.getElementById("noButton");
-    const yesButton = document.getElementById("yesButton");
+    const noButton =
+      document.getElementById("noButton");
+
+    const yesButton =
+      document.getElementById("yesButton");
+
+    const confirmButton =
+      document.getElementById("confirmButton");
 
     const questionScreen =
       document.getElementById("questionScreen");
 
-    const success =
-      document.getElementById("success");
+    const detailsScreen =
+      document.getElementById("detailsScreen");
+
+    const finalScreen =
+      document.getElementById("finalScreen");
 
 
     let attempts = 0;
-
 
     const messages = [
       "Are you sure? 🤨",
@@ -127,7 +299,6 @@
 
       attempts++;
 
-
       const maxX =
         window.innerWidth -
         noButton.offsetWidth -
@@ -138,40 +309,118 @@
         noButton.offsetHeight -
         20;
 
-
       const x =
         Math.floor(Math.random() * maxX);
 
       const y =
         Math.floor(Math.random() * maxY);
 
-
       noButton.style.left = x + "px";
       noButton.style.top = y + "px";
     }
 
 
-    // Desktop
-    noButton.addEventListener("mouseover", moveNo);
+    noButton.addEventListener(
+      "mouseover",
+      moveNo
+    );
 
 
-    // Phone
-    noButton.addEventListener("touchstart", function(event) {
-      event.preventDefault();
-      moveNo();
-    });
+    noButton.addEventListener(
+      "touchstart",
+      function(event) {
+
+        event.preventDefault();
+
+        moveNo();
+
+      }
+    );
 
 
-    // YES
-    yesButton.addEventListener("click", function() {
+    yesButton.addEventListener(
+      "click",
+      function() {
 
-      noButton.style.display = "none";
+        noButton.style.display = "none";
 
-      questionScreen.style.display = "none";
+        questionScreen.style.display =
+          "none";
 
-      success.style.display = "block";
+        detailsScreen.style.display =
+          "block";
 
-    });
+      }
+    );
+
+
+    confirmButton.addEventListener(
+      "click",
+      function() {
+
+        const date =
+          document.getElementById("date").value;
+
+        const time =
+          document.getElementById("time").value;
+
+        const location =
+          document.getElementById("location").value;
+
+        const activity =
+          document.getElementById("activity").value;
+
+        const message =
+          document.getElementById("message").value;
+
+
+        if (!date || !time || !location) {
+
+          alert(
+            "Please choose a date, time and location ❤️"
+          );
+
+          return;
+
+        }
+
+
+        document.getElementById(
+          "finalDate"
+        ).innerText = date;
+
+
+        document.getElementById(
+          "finalTime"
+        ).innerText = time;
+
+
+        document.getElementById(
+          "finalLocation"
+        ).innerText =
+          location || "Surprise me";
+
+
+        document.getElementById(
+          "finalActivity"
+        ).innerText =
+          activity || "We'll decide together";
+
+
+        document.getElementById(
+          "finalMessage"
+        ).innerText =
+          message || "No message";
+
+
+        detailsScreen.style.display =
+          "none";
+
+        finalScreen.style.display =
+          "block";
+
+      }
+    );
 
   </script>
 
