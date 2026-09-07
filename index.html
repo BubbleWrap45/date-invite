@@ -106,40 +106,55 @@
 
   </div>
 
-  <script>
-    const noButton = document.getElementById("noButton");
-    const yesButton = document.getElementById("yesButton");
-    const questionScreen = document.getElementById("questionScreen");
-    const success = document.getElementById("success");
+<script>
+  const noButton = document.getElementById("noButton");
+  const yesButton = document.getElementById("yesButton");
+  const questionScreen = document.getElementById("questionScreen");
+  const success = document.getElementById("success");
 
-    function moveNoButton() {
-      const maxX = window.innerWidth - noButton.offsetWidth - 20;
-      const maxY = window.innerHeight - noButton.offsetHeight - 20;
+  let noAttempts = 0;
+  const maxAttempts = 5;
 
-      const randomX = Math.max(10, Math.random() * maxX);
-      const randomY = Math.max(10, Math.random() * maxY);
+  function moveNoButton() {
+    noAttempts++;
 
-      noButton.style.position = "fixed";
-      noButton.style.left = randomX + "px";
-      noButton.style.top = randomY + "px";
+    // After 5 attempts, make NO disappear
+    if (noAttempts >= maxAttempts) {
+      noButton.style.display = "none";
+      return;
     }
 
-    noButton.addEventListener("mouseover", moveNoButton);
-    noButton.addEventListener("click", function(event) {
-      event.preventDefault();
-      moveNoButton();
-    });
+    const maxX = window.innerWidth - noButton.offsetWidth - 20;
+    const maxY = window.innerHeight - noButton.offsetHeight - 20;
 
-    noButton.addEventListener("touchstart", function(event) {
-      event.preventDefault();
-      moveNoButton();
-    });
+    const randomX = Math.max(10, Math.random() * maxX);
+    const randomY = Math.max(10, Math.random() * maxY);
 
-    yesButton.addEventListener("click", function() {
-      questionScreen.style.display = "none";
-      success.style.display = "block";
-    });
-  </script>
+    noButton.style.position = "fixed";
+    noButton.style.left = randomX + "px";
+    noButton.style.top = randomY + "px";
+  }
+
+  // Computer
+  noButton.addEventListener("mouseenter", moveNoButton);
+
+  // Phone/tablet
+  noButton.addEventListener("touchstart", function(event) {
+    event.preventDefault();
+    moveNoButton();
+  });
+
+  // If they manage to click it
+  noButton.addEventListener("click", function(event) {
+    event.preventDefault();
+    moveNoButton();
+  });
+
+  yesButton.addEventListener("click", function() {
+    questionScreen.style.display = "none";
+    success.style.display = "block";
+  });
+</script>
 
 </body>
 </html>
