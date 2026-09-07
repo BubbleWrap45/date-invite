@@ -19,6 +19,7 @@
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #ffe4ec, #fff7fa);
       padding: 20px;
+      overflow-x: hidden;
     }
 
     .card {
@@ -29,6 +30,7 @@
       border-radius: 25px;
       text-align: center;
       box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+      overflow: hidden;
     }
 
     h1 {
@@ -42,10 +44,25 @@
 
     .step {
       display: none;
+      opacity: 0;
+      transform: translateX(30px);
     }
 
     .step.active {
       display: block;
+      animation: slideIn 0.4s ease forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     button {
@@ -60,7 +77,15 @@
       background: #ff4f81;
       color: white;
       width: 100%;
-      margin-top: 15px;
+      margin-top: 20px;
+    }
+
+    .back {
+      background: transparent;
+      color: #777;
+      width: 100%;
+      margin-top: 8px;
+      font-size: 15px;
     }
 
     #yesButton {
@@ -72,6 +97,7 @@
     #noButton {
       background: #eee;
       position: fixed;
+      z-index: 100;
     }
 
     .heart {
@@ -104,6 +130,46 @@
       min-height: 90px;
     }
 
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px;
+      border: 2px solid #eee;
+      border-radius: 15px;
+      cursor: pointer;
+      text-align: left;
+      transition: 0.2s;
+    }
+
+    .option:hover {
+      border-color: #ffb3c7;
+      background: #fff8fa;
+    }
+
+    .option input {
+      width: auto;
+      margin: 0;
+      transform: scale(1.2);
+    }
+
+    .option.selected {
+      border-color: #ff4f81;
+      background: #fff1f5;
+    }
+
+    .other-box {
+      margin-top: 20px;
+      text-align: left;
+    }
+
     .confirmation {
       margin-top: 25px;
       padding: 22px;
@@ -123,8 +189,9 @@
     }
 
     .small {
-      font-size: 0.9rem;
-      color: #888;
+      font-size: 0.95rem;
+      color: #777;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -136,17 +203,21 @@
     <!-- QUESTION -->
     <div id="questionScreen" class="step active">
       <h1>I have a question for you ❤️</h1>
+
       <p>Will you go on a date with me?</p>
 
       <button id="yesButton">YES ❤️</button>
       <button id="noButton">NO</button>
     </div>
 
+
     <!-- DATE + TIME -->
     <div id="dateStep" class="step">
       <div class="heart">❤️</div>
+
       <h1>Good choice 😌</h1>
-      <p>First, when should we go?</p>
+
+      <p>When should we go?</p>
 
       <div class="form-group">
         <label for="date">📅 Date</label>
@@ -163,48 +234,138 @@
       </button>
     </div>
 
+
     <!-- LOCATION -->
     <div id="locationStep" class="step">
       <h1>Where should we go? 📍</h1>
 
-      <div class="form-group">
-        <label for="location">Location</label>
+      <p>Pick one.</p>
+
+      <div class="option-list">
+
+        <label class="option">
+          <input type="radio" name="location" value="Restaurant">
+          🍝 Restaurant
+        </label>
+
+        <label class="option">
+          <input type="radio" name="location" value="Beach">
+          🏖️ Beach
+        </label>
+
+        <label class="option">
+          <input type="radio" name="location" value="Cafe">
+          ☕ Cafe
+        </label>
+
+        <label class="option">
+          <input type="radio" name="location" value="Bar">
+          🍸 Bar
+        </label>
+
+        <label class="option">
+          <input type="radio" name="location" value="Your place">
+          🏠 Your place
+        </label>
+
+        <label class="option">
+          <input type="radio" name="location" value="My place">
+          🏡 My place
+        </label>
+
+      </div>
+
+      <div class="other-box">
+        <label for="otherLocation">
+          None of these? Write your own:
+        </label>
+
         <input
           type="text"
-          id="location"
-          placeholder="Restaurant, beach, your place..."
+          id="otherLocation"
+          placeholder="Somewhere else..."
         >
       </div>
 
       <button class="primary" id="locationNext">
         Next →
       </button>
+
+      <button class="back" id="locationBack">
+        ← Back
+      </button>
     </div>
+
 
     <!-- ACTIVITY -->
     <div id="activityStep" class="step">
       <h1>What should we do? ✨</h1>
 
-      <div class="form-group">
-        <label for="activity">Plan</label>
+      <p>Choose your favourite.</p>
+
+      <div class="option-list">
+
+        <label class="option">
+          <input type="radio" name="activity" value="Dinner">
+          🍽️ Dinner
+        </label>
+
+        <label class="option">
+          <input type="radio" name="activity" value="Drinks">
+          🍹 Drinks
+        </label>
+
+        <label class="option">
+          <input type="radio" name="activity" value="Movie">
+          🎬 Movie
+        </label>
+
+        <label class="option">
+          <input type="radio" name="activity" value="Walk">
+          🌅 Walk
+        </label>
+
+        <label class="option">
+          <input type="radio" name="activity" value="Dessert">
+          🍦 Dessert
+        </label>
+
+        <label class="option">
+          <input type="radio" name="activity" value="Surprise me">
+          🎁 Surprise me
+        </label>
+
+      </div>
+
+      <div class="other-box">
+        <label for="otherActivity">
+          Got another idea?
+        </label>
+
         <input
           type="text"
-          id="activity"
-          placeholder="Dinner, drinks, movie, surprise me..."
+          id="otherActivity"
+          placeholder="Write your idea..."
         >
       </div>
 
       <button class="primary" id="activityNext">
         Next →
       </button>
+
+      <button class="back" id="activityBack">
+        ← Back
+      </button>
     </div>
+
 
     <!-- MESSAGE -->
     <div id="messageStep" class="step">
       <h1>Anything else? 💌</h1>
 
+      <p>This part is optional.</p>
+
       <div class="form-group">
-        <label for="message">Message</label>
         <textarea
           id="message"
           placeholder="Leave me a message..."
@@ -214,7 +375,12 @@
       <button class="primary" id="confirmButton">
         Confirm our date ❤️
       </button>
+
+      <button class="back" id="messageBack">
+        ← Back
+      </button>
     </div>
+
 
     <!-- FINAL -->
     <div id="finalScreen" class="step">
@@ -236,12 +402,12 @@
         </p>
 
         <p>
-          <strong>📍 Location:</strong>
+          <strong>📍 Where:</strong>
           <span id="finalLocation"></span>
         </p>
 
         <p>
-          <strong>✨ Plan:</strong>
+          <strong>✨ What we're doing:</strong>
           <span id="finalActivity"></span>
         </p>
 
@@ -252,11 +418,12 @@
       </div>
 
       <p class="small">
-        📸 Screenshot this and send it to me
+        📸 Screenshot this and send it to me ❤️
       </p>
     </div>
 
   </div>
+
 
   <script>
     const noButton = document.getElementById("noButton");
@@ -283,15 +450,24 @@
       "Nice try 😂"
     ];
 
+
     function showStep(step) {
-      const steps = document.querySelectorAll(".step");
+      document
+        .querySelectorAll(".step")
+        .forEach(function(item) {
+          item.classList.remove("active");
+        });
 
-      steps.forEach(function(item) {
-        item.classList.remove("active");
-      });
+      setTimeout(function() {
+        step.classList.add("active");
 
-      step.classList.add("active");
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }, 80);
     }
+
 
     function moveNo() {
       if (attempts >= 4) {
@@ -302,78 +478,249 @@
       noButton.innerText = messages[attempts];
       attempts++;
 
-      const maxX = window.innerWidth - noButton.offsetWidth - 20;
-      const maxY = window.innerHeight - noButton.offsetHeight - 20;
+      const maxX =
+        window.innerWidth -
+        noButton.offsetWidth -
+        20;
 
-      const x = Math.floor(Math.random() * maxX);
-      const y = Math.floor(Math.random() * maxY);
+      const maxY =
+        window.innerHeight -
+        noButton.offsetHeight -
+        20;
+
+      const x =
+        Math.floor(
+          Math.random() * Math.max(maxX, 10)
+        );
+
+      const y =
+        Math.floor(
+          Math.random() * Math.max(maxY, 10)
+        );
 
       noButton.style.left = x + "px";
       noButton.style.top = y + "px";
     }
 
+
     noButton.addEventListener("mouseover", moveNo);
 
-    noButton.addEventListener("touchstart", function(event) {
-      event.preventDefault();
-      moveNo();
-    });
-
-    yesButton.addEventListener("click", function() {
-      noButton.style.display = "none";
-      showStep(dateStep);
-    });
-
-    dateNext.addEventListener("click", function() {
-      const date = document.getElementById("date").value;
-      const time = document.getElementById("time").value;
-
-      if (!date || !time) {
-        alert("Please choose a date and time ❤️");
-        return;
+    noButton.addEventListener(
+      "touchstart",
+      function(event) {
+        event.preventDefault();
+        moveNo();
       }
+    );
 
-      showStep(locationStep);
-    });
 
-    locationNext.addEventListener("click", function() {
-      const location = document.getElementById("location").value.trim();
-
-      if (!location) {
-        alert("Please choose where we should go 📍");
-        return;
+    yesButton.addEventListener(
+      "click",
+      function() {
+        noButton.style.display = "none";
+        showStep(dateStep);
       }
+    );
 
-      showStep(activityStep);
-    });
 
-    activityNext.addEventListener("click", function() {
-      const activity = document.getElementById("activity").value.trim();
+    dateNext.addEventListener(
+      "click",
+      function() {
+        const date =
+          document.getElementById("date").value;
 
-      if (!activity) {
-        alert("Tell me what we should do ✨");
-        return;
+        const time =
+          document.getElementById("time").value;
+
+        if (!date || !time) {
+          alert("Please choose a date and time ❤️");
+          return;
+        }
+
+        showStep(locationStep);
       }
+    );
 
-      showStep(messageStep);
-    });
 
-    confirmButton.addEventListener("click", function() {
-      const date = document.getElementById("date").value;
-      const time = document.getElementById("time").value;
-      const location = document.getElementById("location").value;
-      const activity = document.getElementById("activity").value;
-      const message = document.getElementById("message").value;
+    locationNext.addEventListener(
+      "click",
+      function() {
+        const selectedLocation =
+          document.querySelector(
+            'input[name="location"]:checked'
+          );
 
-      document.getElementById("finalDate").innerText = date;
-      document.getElementById("finalTime").innerText = time;
-      document.getElementById("finalLocation").innerText = location;
-      document.getElementById("finalActivity").innerText = activity;
-      document.getElementById("finalMessage").innerText =
-        message || "No message";
+        const otherLocation =
+          document
+            .getElementById("otherLocation")
+            .value
+            .trim();
 
-      showStep(finalScreen);
-    });
+        if (!selectedLocation && !otherLocation) {
+          alert(
+            "Please choose a location or write your own 📍"
+          );
+          return;
+        }
+
+        showStep(activityStep);
+      }
+    );
+
+
+    activityNext.addEventListener(
+      "click",
+      function() {
+        const selectedActivity =
+          document.querySelector(
+            'input[name="activity"]:checked'
+          );
+
+        const otherActivity =
+          document
+            .getElementById("otherActivity")
+            .value
+            .trim();
+
+        if (!selectedActivity && !otherActivity) {
+          alert(
+            "Please choose something to do or write your own ✨"
+          );
+          return;
+        }
+
+        showStep(messageStep);
+      }
+    );
+
+
+    document
+      .getElementById("locationBack")
+      .addEventListener(
+        "click",
+        function() {
+          showStep(dateStep);
+        }
+      );
+
+
+    document
+      .getElementById("activityBack")
+      .addEventListener(
+        "click",
+        function() {
+          showStep(locationStep);
+        }
+      );
+
+
+    document
+      .getElementById("messageBack")
+      .addEventListener(
+        "click",
+        function() {
+          showStep(activityStep);
+        }
+      );
+
+
+    document
+      .querySelectorAll('.option input[type="radio"]')
+      .forEach(function(radio) {
+        radio.addEventListener(
+          "change",
+          function() {
+            const groupName = this.name;
+
+            document
+              .querySelectorAll(
+                'input[name="' + groupName + '"]'
+              )
+              .forEach(function(input) {
+                input
+                  .closest(".option")
+                  .classList
+                  .remove("selected");
+              });
+
+            this
+              .closest(".option")
+              .classList
+              .add("selected");
+          }
+        );
+      });
+
+
+    confirmButton.addEventListener(
+      "click",
+      function() {
+        const date =
+          document.getElementById("date").value;
+
+        const time =
+          document.getElementById("time").value;
+
+        const selectedLocation =
+          document.querySelector(
+            'input[name="location"]:checked'
+          );
+
+        const otherLocation =
+          document
+            .getElementById("otherLocation")
+            .value
+            .trim();
+
+        const selectedActivity =
+          document.querySelector(
+            'input[name="activity"]:checked'
+          );
+
+        const otherActivity =
+          document
+            .getElementById("otherActivity")
+            .value
+            .trim();
+
+        const message =
+          document
+            .getElementById("message")
+            .value
+            .trim();
+
+        const location =
+          otherLocation ||
+          selectedLocation.value;
+
+        const activity =
+          otherActivity ||
+          selectedActivity.value;
+
+        document
+          .getElementById("finalDate")
+          .innerText = date;
+
+        document
+          .getElementById("finalTime")
+          .innerText = time;
+
+        document
+          .getElementById("finalLocation")
+          .innerText = location;
+
+        document
+          .getElementById("finalActivity")
+          .innerText = activity;
+
+        document
+          .getElementById("finalMessage")
+          .innerText =
+          message || "No message ❤️";
+
+        showStep(finalScreen);
+      }
+    );
   </script>
 
 </body>
